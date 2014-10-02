@@ -1,0 +1,12 @@
+<div class="jumbotron">
+    <div ng-if="workflowService.getCurrentNode().shouldShow('Welcome')">
+        Welcome
+    </div>
+    <div ng-if="workflowService.getCurrentNode().shouldShow('Login')">
+        Login
+    </div>
+    <div ng-if="workflowService.getCurrentNode().shouldShow('Result')">
+        Result
+    </div>
+    <button type="button" class="btn btn-primary" data-ng-click="workflowService.advance()">Next</button>
+</div>
