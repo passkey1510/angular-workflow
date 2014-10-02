@@ -11,5 +11,5 @@ angular.module('flowApp')
     .controller('MainCtrl', ['$scope', 'WorkflowService', function ($scope, WorkflowService) {
         $scope.workflowService = WorkflowService;
 
-        WorkflowService.start('WelcomeNode').link('WelcomeNode', 'LoginNode').link('LoginNode', 'ResultNode');
+        WorkflowService.start('WelcomeNode').link('WelcomeNode', 'LoginNode').link('LoginNode', 'ResultNode').link('LoginNode', 'WelcomeNode');
     }]);

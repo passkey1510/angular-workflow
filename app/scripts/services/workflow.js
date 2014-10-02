@@ -3,6 +3,7 @@ var workflow = angular.module('workflow', []);
 workflow.factory('WorkflowService', ['$injector', function($injector) {
     var name = 'WorkflowService';
     var currentNode;
+    var histories = [];
 
     var start = function(start) {
         this.currentNode = $injector.get(start);
@@ -28,10 +29,32 @@ workflow.factory('WorkflowService', ['$injector', function($injector) {
     }
 
     var advance = function() {
-        var nextNode = this.getCurrentNode().advance()
-        this.currentNode = nextNode;
+        histories.push(this.getCurrentNode().getName());
+        this.currentNode = this.getCurrentNode().advance();
 
         return this;
+    }
+
+    var rewind = function() {
+        if (histories.length == 0) {
+            return this;
+        }
+        var lastNodeName = histories.pop();
+        this.currentNode = this.getCurrentNode().advance(lastNodeName);
+
+        return this;
+    }
+
+    var isRewindable = function() {
+        if (histories.length == 0) {
+            return false;
+        }
+
+        return this.getCurrentNode().has(histories[histories.length-1]);
+    }
+
+    var isAdvanceable = function() {
+        return this.getCurrentNode().nodes.length > 0;
     }
 
     return {
@@ -39,14 +62,16 @@ workflow.factory('WorkflowService', ['$injector', function($injector) {
         start: start,
         link: link,
         getCurrentNode: getCurrentNode,
-        advance: advance
+        advance: advance,
+        rewind: rewind,
+        isRewindable: isRewindable,
+        isAdvanceable: isAdvanceable
     }
 }]);
 
 workflow.factory('Node', [function() {
     var name;
     var nodes = [];
-    var
 
     var link = function(node) {
         this.nodes.push(node);
@@ -78,12 +103,28 @@ workflow.factory('Node', [function() {
         return this.name;
     };
 
+    var has = function(name) {
+        if (this.nodes.length == 0) {
+            return false;
+        }
+
+        for (var i=0; i < this.nodes.length; i++) {
+            var node = this.nodes[i];
+            if (node.getName() == name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     return {
         nodes: nodes,
         link: link,
         shouldShow: shouldShow,
         getName: getName,
-        advance: advance
+        advance: advance,
+        has: has
     };
 }]);
 

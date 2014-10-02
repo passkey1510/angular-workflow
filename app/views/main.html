@@ -1,4 +1,5 @@
 <div class="jumbotron">
+    <button ng-if="workflowService.isRewindable()" type="button" class="btn btn-primary" data-ng-click="workflowService.rewind()">Back</button>
     <div ng-if="workflowService.getCurrentNode().shouldShow('Welcome')">
         Welcome
     </div>
@@ -8,5 +9,5 @@
     <div ng-if="workflowService.getCurrentNode().shouldShow('Result')">
         Result
     </div>
-    <button type="button" class="btn btn-primary" data-ng-click="workflowService.advance()">Next</button>
+    <button ng-if="workflowService.isAdvanceable()" type="button" class="btn btn-primary" data-ng-click="workflowService.advance()">Next</button>
 </div>
